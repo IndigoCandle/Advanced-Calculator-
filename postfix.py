@@ -1,4 +1,4 @@
-Operators = set(['+', '-', '*', '/', '(', ')', '^'])  # collection of Operators
+Operators = {'+', '-', '*', '/', '(', ')', '^'}  # collection of Operators
 
 Priority = {'+': 1, '-': 1, '*': 2, '/': 2, '^': 3}  # dictionary having priorities of Operators
 

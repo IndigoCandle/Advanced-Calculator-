@@ -22,7 +22,7 @@ def convert_str_to_lst(expression: str):
             counter += 1
 
         if temp_string != '':
-            output.append(temp_string)
+            output.append(float(temp_string))
         if counter < len(expression):
             character = expression[counter]
             output.append(character)
@@ -51,13 +51,51 @@ def calculator(revised_list: list):
     dict_kdimut = {"+": 1, "-": 1, "*": 2, "/": 2, "^": 3, "%": 4, "@": 5, "$": 5, "&": 5, "~": 6, "!": 6}
     operands = {"+", "*", "/", "^", "%", "@", "$", "&", "~", "!", "-"}
     output = []
+    kdimut = 6
 
-    for operand in revised_list:
-        operation_lst = operation
+    for i in range(6):
 
-    return operation_lst
+        for z in range(3):
+            pos = 0
+            while pos < len(revised_list):
+                if revised_list[pos] in operands:
+                    if dict_kdimut[revised_list[pos]] == kdimut:
+                        result = all_operations(revised_list[pos - 1], revised_list[pos], revised_list[pos + 1])
+                        for j in range(3):
+                            revised_list.pop(pos - 1)
+
+                        revised_list.insert(pos-1, result)
+                pos += 1
+        kdimut -= 1
+    final_result = revised_list[0]
+    if final_result - int(final_result) == 0:
+        final_result = int(final_result)
+    return final_result
 
 
-data = convert_str_to_lst("59+33-----97")
+def all_operations(first_obj, operand, second_obj):
+    if operand == '+':
+        return first_obj + second_obj
+    elif operand == '-':
+        return first_obj - second_obj
+    elif operand == '*':
+        return first_obj * second_obj
+    elif operand == '/':
+        return first_obj / second_obj
+    elif operand == '@':
+        return (first_obj + second_obj) / 2
+    elif operand == '<=':
+        return first_obj <= second_obj
+    elif operand == '>':
+        return first_obj > second_obj
+    elif operand == '>=':
+        return first_obj >= second_obj
+    else:
+        return "Invalid operand"
+
+
+data = convert_str_to_lst("59.2+33-----97 * 2")
 print(data)
-print(handle_minus(data))
+data = handle_minus(data)
+print(data)
+print(calculator(data))
