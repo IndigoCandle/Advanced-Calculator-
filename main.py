@@ -47,10 +47,18 @@ def handle_minus(expression_array: list):
     return temp_expression_array
 
 
+def calculate(expression_lst: list):
+    sub_expression = ''
+    prethesis_handler = []
+    pos = 0
+
+    while pos < len(expression_lst):
+        if expression_lst[pos] == '(':
+            prethesis_handler.append(expression_lst[pos])
+
 def calculator(revised_list: list):
     dict_kdimut = {"+": 1, "-": 1, "*": 2, "/": 2, "^": 3, "%": 4, "@": 5, "$": 5, "&": 5, "~": 6, "!": 6}
     operands = {"+", "*", "/", "^", "%", "@", "$", "&", "~", "!", "-"}
-    output = []
     kdimut = 6
 
     for i in range(6):
@@ -64,7 +72,7 @@ def calculator(revised_list: list):
                         for j in range(3):
                             revised_list.pop(pos - 1)
 
-                        revised_list.insert(pos-1, result)
+                        revised_list.insert(pos - 1, result)
                 pos += 1
         kdimut -= 1
     final_result = revised_list[0]
@@ -73,28 +81,31 @@ def calculator(revised_list: list):
     return final_result
 
 
-def all_operations(first_obj, operand, second_obj):
-    if operand == '+':
-        return first_obj + second_obj
-    elif operand == '-':
-        return first_obj - second_obj
-    elif operand == '*':
-        return first_obj * second_obj
-    elif operand == '/':
-        return first_obj / second_obj
-    elif operand == '@':
-        return (first_obj + second_obj) / 2
-    elif operand == '<=':
-        return first_obj <= second_obj
-    elif operand == '>':
-        return first_obj > second_obj
-    elif operand == '>=':
-        return first_obj >= second_obj
-    else:
-        return "Invalid operand"
+def all_operations(first_obj, operator, second_obj):
+    match operator:
+        case '+':
+            return first_obj + second_obj
+        case '-':
+            return first_obj - second_obj
+        case '*':
+            return first_obj * second_obj
+        case '/':
+            return first_obj / second_obj
+        case '@':
+            return (first_obj + second_obj) / 2
+        case '^':
+            return first_obj ** second_obj
+        case '$':
+            return max(first_obj, second_obj)
+        case '&':
+            return min(first_obj, second_obj)
+        case '%':
+            return first_obj % second_obj
+        case _:
+            raise TypeError(f"{operator} is and invalid operand")
 
 
-data = convert_str_to_lst("59.2+33-----97 * 2")
+data = convert_str_to_lst("59.2@33-----97 * 2")
 print(data)
 data = handle_minus(data)
 print(data)
