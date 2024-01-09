@@ -15,7 +15,7 @@ def convert_str_to_lst(expression: str):
         counter += 1
         character = expression[counter]
         if counter == len(expression) - 1:
-            output.append(character)
+            output.append(float(character))
             break
         while counter < len(expression) and expression[counter] not in operators:
             temp_string += expression[counter]
@@ -47,6 +47,19 @@ def handle_minus(expression_array: list):
     return temp_expression_array
 
 
+def handle_operators(expression):
+    pos = 0
+    operators = {'+', '-', '*', '/', '(', ')', '^', '%', '@', '$', '&', '~', '!'}
+    while pos < len(expression) - 1:
+        if expression[pos] in operators:
+            if expression[pos + 1] == '-':
+                expression[pos + 2] *= -1
+                expression.pop(pos + 1)
+            elif expression[pos + 1] == '+':
+                expression.pop(pos + 1)
+        pos += 1
+
+
 def calculate(expression_lst: list):
     sub_expression = ''
     prethesis_handler = []
@@ -55,6 +68,7 @@ def calculate(expression_lst: list):
     while pos < len(expression_lst):
         if expression_lst[pos] == '(':
             prethesis_handler.append(expression_lst[pos])
+
 
 def calculator(revised_list: list):
     dict_kdimut = {"+": 1, "-": 1, "*": 2, "/": 2, "^": 3, "%": 4, "@": 5, "$": 5, "&": 5, "~": 6, "!": 6}
@@ -105,8 +119,10 @@ def all_operations(first_obj, operator, second_obj):
             raise TypeError(f"{operator} is and invalid operand")
 
 
-data = convert_str_to_lst("59.2@33-----97 * 2")
+data = convert_str_to_lst("2.3*----------------------------3*5+0.5")
 print(data)
 data = handle_minus(data)
+print(data)
+handle_operators(data)
 print(data)
 print(calculator(data))

@@ -2,6 +2,9 @@ from operators.singleCharOps.singleCharOps import SingleCharOps
 
 
 class Factorial(SingleCharOps):
+
+    def kdimut(self):
+        return 6
     def operation(self, operand):
         fact = 1
         for i in range(1, operand + 1):
