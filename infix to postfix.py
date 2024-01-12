@@ -1,4 +1,4 @@
-def infix_postfix(exp_list:list) ->list:
+""""def infix_postfix(exp_list:list) ->list:
     postfix_list = []
     operator_stack = []
 
@@ -19,4 +19,4 @@ def infix_postfix(exp_list:list) ->list:
             operator_stack.append(num)
     while operator_stack:
         postfix_list.append(operator_stack.pop())
-    return postfix_list
+    return postfix_list"""

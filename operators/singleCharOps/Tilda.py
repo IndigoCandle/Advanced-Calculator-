@@ -1,16 +1,12 @@
 from operators.singleCharOps.singleCharOps import SingleCharOps
 
 
-class Factorial(SingleCharOps):
-
+class Tilda(SingleCharOps):
     def kdimut(self):
         return 6
 
     def operation(self, operand):
-        fact = 1
-        for i in range(1, operand + 1):
-            fact *= i
-        return fact
+        return -1 * operand
 
     def position(self):
-        return "Right"
+        return "Left"

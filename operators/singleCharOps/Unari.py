@@ -8,3 +8,6 @@ class UnariMinus(SingleCharOps):
 
     def operation(self, operand):
         return -1 * operand
+
+    def position(self):
+        return "Left"

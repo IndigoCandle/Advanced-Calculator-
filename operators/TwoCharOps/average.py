@@ -8,3 +8,4 @@ class Avg(TwoCharOps):
     def operation(self, first_operand, second_operand):
         sum = first_operand + second_operand
         return sum / 2
+

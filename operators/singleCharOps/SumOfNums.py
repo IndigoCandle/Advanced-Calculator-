@@ -14,3 +14,5 @@ class SumOfNum(SingleCharOps):
                 sum += int(num)
         return final_sum
 
+    def position(self):
+        return "Right"
