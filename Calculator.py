@@ -37,6 +37,7 @@ def handle_minus(expression_array: list):
             minus_counter += 1
         if minus_counter > 0:
             if minus_counter % 2 == 0:
+                if temp_expression_array[counter-1] not in factory.operators:
                 temp_expression_array.insert(counter, '+')
             else:
                 temp_expression_array.insert(counter, '-')

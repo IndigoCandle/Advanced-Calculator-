@@ -10,29 +10,30 @@ def check_kdimut(operand):
 
 
 def convert_str_to_lst(expression: str):
-    operators = {'+', '-', '*', '/', '(', ')', '^', '%', '@', '$', '&', '~', '!'}
+    operators = factory.operator_list()
     output = []
     temp_string = ''
     counter = -1
     while counter < len(expression) - 1:
         temp_string = ''
-        if counter >= len(expression) - 1:
-            break
-        counter += 1
-        character = expression[counter]
-        if counter == len(expression) - 1:
-            output.append(float(character))
-            break
-        while counter < len(expression) and expression[counter] not in operators:
-            temp_string += expression[counter]
+        if counter < len(expression) - 1:
             counter += 1
-
-        if temp_string != '':
-            output.append(float(temp_string))
-        if counter < len(expression):
             character = expression[counter]
-            output.append(character)
 
+            while (counter < len(expression) and expression[counter] not in operators
+                   and expression[counter] != ')' and expression[counter] != '('):
+                temp_string += expression[counter]
+                counter += 1
+
+            if temp_string != '' and temp_string != ' ':
+                output.append(float(temp_string))
+            if counter < len(expression):
+                character = expression[counter]
+                output.append(character)
+            else:
+                if character != '' and character != ' ' and character != temp_string:
+                    output.append(float(character))
+                break
     return output
 
 
@@ -46,9 +47,14 @@ def handle_minus(expression_array: list):
             minus_counter += 1
         if minus_counter > 0:
             if minus_counter % 2 == 0:
-                temp_expression_array.insert(counter, '+')
+                if temp_expression_array[counter - 1] not in factory.operators:
+                    temp_expression_array.insert(counter, '+')
             else:
-                temp_expression_array.insert(counter, '-')
+
+                if temp_expression_array[counter - 1] in factory.operators and OperatorCreator.operator_factory(factory, temp_expression_array[counter-1]).position() != "Right":
+                    temp_expression_array.insert(counter, '_')
+                else:
+                    temp_expression_array.insert(counter, '-')
         counter += 1
     return temp_expression_array
 
@@ -66,7 +72,7 @@ def handle_operators(expression):
         pos += 1
 
 
-def calculate(expression_lst: list):
+def bracket_handler(expression_lst: list) -> list:
     sub_expression = ''
     send_temp_expression = []
     result_expression = []
@@ -93,15 +99,17 @@ def calculate(expression_lst: list):
                     stack.append((calculator2(send_temp_expression)).pop())
                     found_bracket = False
                     send_temp_expression = []
+                    if '(' not in stack:
+                        result_expression.append(stack.pop())
+                        break
         if expression_lst[pos] != ')':
             result_expression.append(expression_lst[pos])
         pos += 1
 
-    result_expression.append(stack.pop())
     return result_expression
 
 
-def calculator2(revised_list: list):
+def calculator2(revised_list: list) -> list:
     operator_list_for_kdimut = factory.operator_list()
     curr_operator_list = []
     for element in revised_list:
@@ -138,72 +146,26 @@ def calculator2(revised_list: list):
                             revised_list.pop(pos - 1)
                     elif operator.position() == "Left":
                         find_next_operand = pos + 1
-                        while isinstance(revised_list[find_next_operand], float):
+                        while (not isinstance(revised_list[find_next_operand], float) and
+                               find_next_operand < len(revised_list)):
                             find_next_operand += 1
                         result = operator.operation(revised_list[find_next_operand])
-                        revised_list.insert(pos, result)
+                        revised_list.pop(pos)
+                        revised_list.pop(pos)
                     else:
                         raise SyntaxError("Operator doesn't have a position")
-                    revised_list.append(result)
+                    revised_list.insert(pos-1, result)
+                    pos -= 1
             pos += 1
         operator_list_for_kdimut.pop(-1)
     return revised_list
 
 
-def calculator(revised_list: list):
-    dict_kdimut = {"+": 1, "-": 1, "*": 2, "/": 2, "^": 3, "%": 4, "@": 5, "$": 5, "&": 5, "~": 6, "!": 6}
-    operands = {"+", "*", "/", "^", "%", "@", "$", "&", "~", "!", "-"}
-    kdimut = 6
-
-    for i in range(6):
-
-        for z in range(3):
-            pos = 0
-            while pos < len(revised_list):
-                if revised_list[pos] in operands:
-                    try:
-                        operator = OperatorCreator.operator_factory(factory, revised_list[pos])
-                    except ValueError as e:
-                        raise SyntaxError(f"expression is illegal: {e}")
-                    if operator.kdimut == kdimut:
-                        result = all_operations(revised_list[pos - 1], revised_list[pos], revised_list[pos + 1])
-                        for j in range(3):
-                            revised_list.pop(pos - 1)
-
-                        revised_list.insert(pos - 1, result)
-                pos += 1
-        kdimut -= 1
-    final_result = revised_list[0]
-    if final_result - int(final_result) == 0:
-        final_result = int(final_result)
-    return final_result
-
-
-def all_operations(first_obj, operator, second_obj):
-    match operator:
-        case '+':
-            return first_obj + second_obj
-        case '-':
-            return first_obj - second_obj
-        case '*':
-            return first_obj * second_obj
-        case '/':
-            return first_obj / second_obj
-        case '@':
-            return (first_obj + second_obj) / 2
-        case '^':
-            return first_obj ** second_obj
-        case '$':
-            return max(first_obj, second_obj)
-        case '&':
-            return min(first_obj, second_obj)
-        case '%':
-            return first_obj % second_obj
-        case _:
-            raise TypeError(f"{operator} is and invalid operand")
-data = "2*((5+5)-5)"
+data = "1+(2-3*(3! - 5 ^ 2))"
 print(data)
 data = convert_str_to_lst(data)
-data = calculate(data)
+data = handle_minus(data)
 print(data)
-print(calculator2(data))
+data = bracket_handler(data)
+print(data)
+print(calculator2(data).pop(0))
