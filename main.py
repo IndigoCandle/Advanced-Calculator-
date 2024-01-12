@@ -75,23 +75,24 @@ def calculate(expression_lst: list):
     stack = []
     while pos < len(expression_lst):
         if expression_lst[pos] == '(':
-            while expression_lst[pos] != ')':
-                stack.append(expression_lst[pos])
+            while pos < len(expression_lst) - 1:
+                if expression_lst[pos] != ')':
+                    stack.append(expression_lst[pos])
                 pos += 1
                 if pos == len(expression_lst) and not stack:
                     raise SyntaxError("too many (, not enough )")
-            while len(stack) >= 1 and pos < len(expression_lst):
-                while not found_bracket and stack:
-                    item_to_insert = stack.pop(-1)
-                    if item_to_insert == '(':
-                        found_bracket = True
-                    else:
-                        send_temp_expression.insert(0, item_to_insert)
-                if not found_bracket:
-                    raise SyntaxError("too many ), not enough (")
-                stack.append((calculator2(send_temp_expression)).pop())
-                found_bracket = False
-                send_temp_expression = []
+                if expression_lst[pos] == ')':
+                    while not found_bracket and stack:
+                        item_to_insert = stack.pop(-1)
+                        if item_to_insert == '(':
+                            found_bracket = True
+                        else:
+                            send_temp_expression.insert(0, item_to_insert)
+                    if not found_bracket:
+                        raise SyntaxError("too many ), not enough (")
+                    stack.append((calculator2(send_temp_expression)).pop())
+                    found_bracket = False
+                    send_temp_expression = []
         if expression_lst[pos] != ')':
             result_expression.append(expression_lst[pos])
         pos += 1
@@ -200,15 +201,9 @@ def all_operations(first_obj, operator, second_obj):
             return first_obj % second_obj
         case _:
             raise TypeError(f"{operator} is and invalid operand")
-
-
-print(calculate([2, '*', '(', '(', 5, '+', 5, ')', '-', 5, ')']))
-calculator2([2, '*', 3, '-', 5, '!'])
-
-data = convert_str_to_lst("4 / 2 + 1")
+data = "2*((5+5)-5)"
 print(data)
-data = handle_minus(data)
+data = convert_str_to_lst(data)
+data = calculate(data)
 print(data)
-handle_operators(data)
-print(data)
-print(calculator(data))
+print(calculator2(data))
