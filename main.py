@@ -1,4 +1,3 @@
-
 from operators.operatorFactory import OperatorCreator
 
 factory = OperatorCreator()
@@ -21,11 +20,20 @@ def convert_str_to_lst(expression: str):
 
             while (counter < len(expression) and expression[counter] not in operators
                    and expression[counter] != ')' and expression[counter] != '('):
+                if expression[counter] != ' ' and expression[counter] != '.':
+                    try:
+                        check = float(expression[counter])
+                    except ValueError:
+
+                        raise SyntaxError(f"could not convert {expression[counter]} to float - Illegal operator")
                 temp_string += expression[counter]
                 counter += 1
 
             if temp_string != '' and temp_string != ' ':
-                output.append(float(temp_string))
+                try:
+                    output.append(float(temp_string))
+                except ValueError as e:
+                    raise SyntaxError(f"too many dots: {e}")
             if counter < len(expression):
                 character = expression[counter]
                 output.append(character)
@@ -57,8 +65,11 @@ def handle_minus(expression_array: list):
             minus_counter += 1
         if minus_counter > 0:
             if minus_counter % 2 == 0:
-                if temp_expression_array[counter - 1] not in factory.operators:
+                if temp_expression_array[counter - 1] not in factory.operators and minus_counter != 2:
                     temp_expression_array.insert(counter, '+')
+                else:
+                    temp_expression_array.insert(counter, '+')
+                    temp_expression_array[counter+1] *= -1
             else:
 
                 if (temp_expression_array[counter - 1] in factory.operators and
@@ -67,7 +78,7 @@ def handle_minus(expression_array: list):
                     try:
                         temp_expression_array[counter] *= -1
                     except ArithmeticError as e:
-                        print(f"incorrect operator format: {e}")
+                        raise SyntaxError(f"incorrect operator format: {e}")
                 else:
                     temp_expression_array.insert(counter, '-')
         counter += 1
@@ -110,16 +121,21 @@ def bracket_handler(expression_lst: list) -> list:
                             send_temp_expression.insert(0, item_to_insert)
                     if not found_bracket:
                         raise SyntaxError("too many ), not enough (")
-                    stack.append((calculator2(send_temp_expression)).pop())
+                    try:
+                        stack.append((calculator2(send_temp_expression)).pop())
+                    except IndexError:
+                        raise SyntaxError(f"Brackets can't be empty: {expression_lst}")
                     found_bracket = False
                     send_temp_expression = []
                     if '(' not in stack:
                         result_expression.append(stack.pop())
                         break
+        #        if expression_lst[pos] == ')' and not found_bracket: SyntaxError("too many ), not enough (")
         if expression_lst[pos] != ')':
             result_expression.append(expression_lst[pos])
         pos += 1
-
+    if stack:
+        raise SyntaxError("too many (, not enough )")
     return result_expression
 
 
@@ -150,12 +166,20 @@ def calculator2(revised_list: list) -> list:
                 curr_kdimut = operator.kdimut()
                 if curr_kdimut == kdimut:
                     if operator.position() == "Center":
-                        result = operator.operation(revised_list[pos - 1], revised_list[pos + 1])
+                        try:
+                            result = operator.operation(revised_list[pos - 1], revised_list[pos + 1])
+                        except ArithmeticError as e:
+                            raise ArithmeticError(e)
+                        except IndexError:
+                            raise SyntaxError(f"insufficient operands {revised_list}")
                         for j in range(3):
                             revised_list.pop(pos - 1)
 
                     elif operator.position() == "Right":
-                        result = operator.operation(revised_list[pos - 1])
+                        try:
+                            result = operator.operation(revised_list[pos - 1])
+                        except ValueError as e:
+                            raise SyntaxError(f"Error - {e}")
                         for j in range(2):
                             revised_list.pop(pos - 1)
                     elif operator.position() == "Left":
@@ -176,7 +200,7 @@ def calculator2(revised_list: list) -> list:
     return revised_list
 
 
-data = "5*((23+3)-1+(2*3))"
+data = "(3+5)) + 2"
 print(data)
 data = convert_str_to_lst(data)
 print(data)
