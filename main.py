@@ -40,6 +40,17 @@ def convert_str_to_lst(expression: str):
 def handle_minus(expression_array: list):
     counter = 0
     temp_expression_array = expression_array
+    if expression_array[counter] == '-':
+        minus_counter = 0
+        while temp_expression_array[counter] == '-':
+            temp_expression_array.pop(counter)
+            minus_counter += 1
+        if minus_counter > 0:
+            if minus_counter % 2 == 0:
+                counter -= 1
+            else:
+                temp_expression_array.insert(0, '_')
+
     while counter < len(temp_expression_array) - 1:
         minus_counter = 0
         while temp_expression_array[counter] == '-':
@@ -52,8 +63,8 @@ def handle_minus(expression_array: list):
             else:
 
                 if (temp_expression_array[counter - 1] in factory.operators and
-                OperatorCreator.operator_factory(factory,
-                                                 temp_expression_array[counter - 1]).position() != "Right"):
+                        OperatorCreator.operator_factory(factory,
+                                                         temp_expression_array[counter - 1]).position() != "Right"):
                     try:
                         temp_expression_array[counter] *= -1
                     except ArithmeticError as e:
@@ -166,7 +177,7 @@ def calculator2(revised_list: list) -> list:
     return revised_list
 
 
-data = "-3^2"
+data = "---3!"
 print(data)
 data = convert_str_to_lst(data)
 print(data)
