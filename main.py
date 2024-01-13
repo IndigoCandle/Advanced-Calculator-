@@ -1,4 +1,4 @@
-from operators import operatorFactory
+
 from operators.operatorFactory import OperatorCreator
 
 factory = OperatorCreator()
@@ -12,7 +12,6 @@ def check_kdimut(operand):
 def convert_str_to_lst(expression: str):
     operators = factory.operator_list()
     output = []
-    temp_string = ''
     counter = -1
     while counter < len(expression) - 1:
         temp_string = ''
@@ -89,7 +88,6 @@ def handle_operators(expression):
 
 
 def bracket_handler(expression_lst: list) -> list:
-    sub_expression = ''
     send_temp_expression = []
     result_expression = []
     pos = 0
@@ -162,7 +160,8 @@ def calculator2(revised_list: list) -> list:
                             revised_list.pop(pos - 1)
                     elif operator.position() == "Left":
                         find_next_operand = pos + 1
-                        while (not isinstance(revised_list[find_next_operand], float) and
+                        while (not isinstance(revised_list[find_next_operand], float) and not
+                                isinstance(revised_list[find_next_operand], int) and
                                find_next_operand < len(revised_list)):
                             find_next_operand += 1
                         result = operator.operation(revised_list[find_next_operand])
@@ -177,7 +176,7 @@ def calculator2(revised_list: list) -> list:
     return revised_list
 
 
-data = "---3!"
+data = "5*((23+3)-1+(2*3))"
 print(data)
 data = convert_str_to_lst(data)
 print(data)
