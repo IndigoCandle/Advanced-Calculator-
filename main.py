@@ -67,9 +67,10 @@ def handle_minus(expression_array: list):
             if minus_counter % 2 == 0:
                 if temp_expression_array[counter - 1] not in factory.operators and minus_counter != 2:
                     temp_expression_array.insert(counter, '+')
-                else:
+                elif not temp_expression_array[counter - 1] in factory.operators:
                     temp_expression_array.insert(counter, '+')
-                    temp_expression_array[counter+1] *= -1
+                    temp_expression_array[counter + 1] *= -1
+
             else:
 
                 if (temp_expression_array[counter - 1] in factory.operators and
@@ -200,7 +201,7 @@ def calculator2(revised_list: list) -> list:
     return revised_list
 
 
-data = "(3+5)) + 2"
+data = "(5*3+8/2)^2%7+(6@4@2-9&3&5)"
 print(data)
 data = convert_str_to_lst(data)
 print(data)
