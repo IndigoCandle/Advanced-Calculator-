@@ -10,6 +10,7 @@ from operators.TwoCharOps.plus import Plus
 from operators.singleCharOps.Unari import UnariMinus
 from operators.singleCharOps.Tilda import Tilda
 from operators.singleCharOps.factorial import Factorial
+from operators.singleCharOps.Sign_Minus import SignMinus
 
 
 class OperatorCreator:
@@ -24,11 +25,12 @@ class OperatorCreator:
                  "~": Tilda,
                  "!": Factorial,
                  "-": Minus,
-                 "_": UnariMinus}
+                 "_": UnariMinus,
+                 "---": SignMinus}
 
     @staticmethod
     def operator_list():
-        operators = ['+', '-', '*', '/', '_', '^', '%', '@', '$', '&', '~', '!', '#']
+        operators = ['+', '-', '*', '/', '_', '^', '%', '@', '$', '&', '~', '!', '#','---']
         return operators
 
     def operator_factory(self, operator: str):

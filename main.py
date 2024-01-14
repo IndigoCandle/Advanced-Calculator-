@@ -3,11 +3,6 @@ from operators.operatorFactory import OperatorCreator
 factory = OperatorCreator()
 
 
-def check_kdimut(operand):
-    dict_kdimut = {"+": 1, "-": 1, "*": 2, "/": 2, "^": 3, "%": 4, "@": 5, "$": 5, "&": 5, "~": 6, "!": 6}
-    return dict_kdimut[str(operand)]
-
-
 def convert_str_to_lst(expression: str):
     operators = factory.operator_list()
     output = []
@@ -68,8 +63,7 @@ def handle_minus(expression_array: list):
                 if temp_expression_array[counter - 1] not in factory.operators and minus_counter != 2:
                     temp_expression_array.insert(counter, '+')
                 elif not temp_expression_array[counter - 1] in factory.operators:
-                    temp_expression_array.insert(counter, '+')
-                    temp_expression_array[counter + 1] *= -1
+                    temp_expression_array.insert(counter, '---')
 
             else:
 
@@ -77,26 +71,13 @@ def handle_minus(expression_array: list):
                         OperatorCreator.operator_factory(factory,
                                                          temp_expression_array[counter - 1]).position() != "Right"):
                     try:
-                        temp_expression_array[counter] *= -1
+                        temp_expression_array.insert(counter, '=')
                     except ArithmeticError as e:
                         raise SyntaxError(f"incorrect operator format: {e}")
                 else:
                     temp_expression_array.insert(counter, '-')
         counter += 1
     return temp_expression_array
-
-
-def handle_operators(expression):
-    pos = 0
-    operators = {'+', '-', '*', '/', '(', ')', '^', '%', '@', '$', '&', '~', '!'}
-    while pos < len(expression) - 1:
-        if expression[pos] in operators:
-            if expression[pos + 1] == '-':
-                expression[pos + 2] *= -1
-                expression.pop(pos + 1)
-            elif expression[pos + 1] == '+':
-                expression.pop(pos + 1)
-        pos += 1
 
 
 def bracket_handler(expression_lst: list) -> list:
@@ -175,7 +156,7 @@ def calculator2(revised_list: list) -> list:
                             raise SyntaxError(f"insufficient operands {revised_list}")
                         for j in range(3):
                             revised_list.pop(pos - 1)
-
+                        revised_list.insert(pos - 1, result)
                     elif operator.position() == "Right":
                         try:
                             result = operator.operation(revised_list[pos - 1])
@@ -183,25 +164,27 @@ def calculator2(revised_list: list) -> list:
                             raise SyntaxError(f"Error - {e}")
                         for j in range(2):
                             revised_list.pop(pos - 1)
+                        revised_list.insert(pos - 1, result)
                     elif operator.position() == "Left":
                         find_next_operand = pos + 1
                         while (not isinstance(revised_list[find_next_operand], float) and not
-                                isinstance(revised_list[find_next_operand], int) and
+                        isinstance(revised_list[find_next_operand], int) and
                                find_next_operand < len(revised_list)):
                             find_next_operand += 1
                         result = operator.operation(revised_list[find_next_operand])
                         revised_list.pop(pos)
                         revised_list.pop(pos)
+                        revised_list.insert(pos, result)
                     else:
                         raise SyntaxError("Operator doesn't have a position")
-                    revised_list.insert(pos - 1, result)
+
                     pos -= 1
             pos += 1
         operator_list_for_kdimut.pop(-1)
     return revised_list
 
 
-data = "(5*3+8/2)^2%7+(6@4@2-9&3&5)"
+data = "2*3+-(5-3=(4))"
 print(data)
 data = convert_str_to_lst(data)
 print(data)
