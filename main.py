@@ -71,7 +71,7 @@ def handle_minus(expression_array: list):
                         OperatorCreator.operator_factory(factory,
                                                          temp_expression_array[counter - 1]).position() != "Right"):
                     try:
-                        temp_expression_array.insert(counter, '=')
+                        temp_expression_array.insert(counter, '---')
                     except ArithmeticError as e:
                         raise SyntaxError(f"incorrect operator format: {e}")
                 else:
@@ -183,13 +183,15 @@ def calculator2(revised_list: list) -> list:
         operator_list_for_kdimut.pop(-1)
     return revised_list
 
-
-data = "2*3+-(5-3=(4))"
-print(data)
-data = convert_str_to_lst(data)
-print(data)
-data = handle_minus(data)
-print(data)
-data = bracket_handler(data)
-print(data)
-print(calculator2(data).pop(0))
+try:
+    data = "3!-4"
+    print(data)
+    data = convert_str_to_lst(data)
+    print(data)
+    data = handle_minus(data)
+    print(data)
+    data = bracket_handler(data)
+    print(data)
+    print(calculator2(data).pop(0))
+except Exception as e:
+    print(e)

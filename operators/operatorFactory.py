@@ -30,7 +30,7 @@ class OperatorCreator:
 
     @staticmethod
     def operator_list():
-        operators = ['+', '-', '*', '/', '_', '^', '%', '@', '$', '&', '~', '!', '#','---']
+        operators = ['+', '-', '*', '/', '_', '^', '%', '@', '$', '&', '~', '!', '#', '---']
         return operators
 
     def operator_factory(self, operator: str):
