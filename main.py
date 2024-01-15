@@ -69,6 +69,7 @@ def handle_minus(expression_array: list):
                     temp_expression_array.insert(counter, '+')
                 elif not temp_expression_array[counter - 1] in factory.operators:
                     temp_expression_array.insert(counter, '---')
+                    temp_expression_array.insert(counter, '-')
 
             else:
 
@@ -192,7 +193,7 @@ def calculator2(revised_list: list) -> list:
 
 
 try:
-    data = "4   +   4"
+    data = "2--3!"
     print(data)
     data = convert_str_to_lst(data)
     print(data)
