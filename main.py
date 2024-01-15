@@ -190,6 +190,7 @@ def calculator2(revised_list: list) -> list:
         raise SyntaxError(f"{revised_list[1]} out of place")
     return revised_list
 
+
 try:
     data = "4   +   4"
     print(data)
