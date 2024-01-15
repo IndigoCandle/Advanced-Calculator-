@@ -5,8 +5,9 @@ factory = OperatorCreator()
 
 
 class Duplicate(SingleCharOps):
+
     duplicate_operators = {'-': ['_', '---', '+'],
-                           '+': ['++', '==', '+']}
+                           '/': ['/', '=', '*']}
 
 
 def convert_str_to_lst(expression: str):
@@ -77,11 +78,12 @@ def handle_minus(expression_array: list):
             duplicate_counter = run_for_element(temp_expression_array, cur_element, counter)
             if duplicate_counter > 0:
                 if duplicate_counter % 2 == 0:
-                    if temp_expression_array[counter - 1] not in factory.operators and duplicate_counter != 2:
-                        temp_expression_array.insert(counter, Duplicate.duplicate_operators.get(cur_element)[2])
-                    elif not temp_expression_array[counter - 1] in factory.operators:
-                        temp_expression_array.insert(counter, Duplicate.duplicate_operators.get(cur_element)[1])
-                        temp_expression_array.insert(counter, cur_element)
+                    if temp_expression_array[counter - 1] != '(':
+                        if temp_expression_array[counter - 1] not in factory.operators:
+                            temp_expression_array.insert(counter, Duplicate.duplicate_operators.get(cur_element)[1])
+                            temp_expression_array.insert(counter, cur_element)
+                        else:
+                            temp_expression_array.insert(counter, Duplicate.duplicate_operators.get(cur_element)[2])
 
                 else:
 
@@ -92,13 +94,15 @@ def handle_minus(expression_array: list):
                             temp_expression_array.insert(counter, Duplicate.duplicate_operators.get(cur_element)[1])
                         except ArithmeticError as e:
                             raise SyntaxError(f"incorrect operator format: {e}")
+                    elif temp_expression_array[counter - 1] == '(':
+                        temp_expression_array.insert(counter, Duplicate.duplicate_operators.get(cur_element)[0])
                     else:
                         temp_expression_array.insert(counter, cur_element)
         counter += 1
     return temp_expression_array
 
 
-data = "2+++3"
+data = "2+(///3!)"
 data = convert_str_to_lst(data)
 print(data)
 data = handle_minus(data)

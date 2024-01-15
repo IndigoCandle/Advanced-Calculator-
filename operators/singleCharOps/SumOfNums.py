@@ -11,7 +11,7 @@ class SumOfNum(SingleCharOps):
         final_sum = 0
         for num in str_operand:
             if num != '.':
-                sum += int(num)
+                final_sum += int(num)
         return final_sum
 
     def position(self):

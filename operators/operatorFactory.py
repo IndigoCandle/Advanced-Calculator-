@@ -7,6 +7,7 @@ from operators.TwoCharOps.average import Avg
 from operators.TwoCharOps.divide import Div
 from operators.TwoCharOps.multiply import Mul
 from operators.TwoCharOps.plus import Plus
+from operators.singleCharOps.SumOfNums import SumOfNum
 from operators.singleCharOps.Unari import UnariMinus
 from operators.singleCharOps.Tilda import Tilda
 from operators.singleCharOps.factorial import Factorial
@@ -25,13 +26,31 @@ class OperatorCreator:
                  "~": Tilda,
                  "!": Factorial,
                  "-": Minus,
-                 "_": UnariMinus,
-                 "---": SignMinus}
+                 "#": SumOfNum,
+                 "UNARY_MINUS": UnariMinus,
+                 "SIGN_MINUS": SignMinus}
 
     @staticmethod
     def operator_list():
-        operators = ['+', '-', '*', '/', '_', '^', '%', '@', '$', '&', '~', '!', '#', '---']
+        operators = ['+', '-', '*', '/', 'UNARY_MINUS', '^', '%', '@', '$', '&', '~', '!', '#', 'SIGN_MINUS']
         return operators
+
+    @staticmethod
+    def dup_operators():
+        """
+        returns a dictionary of each duplicatable operator - allows to add more duplicatable and unary operators.
+        special operators must be implemented!
+        duplicate_operators:
+            key - the operator
+            list value:
+                [0] - unary version
+                [1] - sign version
+                [2] - result if sum of elements is even and not signed
+        :return:
+            dictionary of duplicate list
+        """
+        duplicate_operators = {'-': ['UNARY_MINUS', 'SIGN_MINUS', '+']}
+        return duplicate_operators
 
     def operator_factory(self, operator: str):
         operator_class = self.operators.get(operator)
