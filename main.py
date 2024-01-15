@@ -4,6 +4,8 @@ factory = OperatorCreator()
 
 
 def convert_str_to_lst(expression: str):
+    if not expression:
+        raise SyntaxError("expression can't be empty")
     operators = factory.operator_list()
     output = []
     counter = -1
@@ -15,7 +17,7 @@ def convert_str_to_lst(expression: str):
 
             while (counter < len(expression) and expression[counter] not in operators
                    and expression[counter] != ')' and expression[counter] != '('):
-                if expression[counter] != ' ' and expression[counter] != '.':
+                if expression[counter] != ' ' and expression[counter] != '.' and expression[counter] != '   ':
                     try:
                         check = float(expression[counter])
                     except ValueError:
@@ -34,12 +36,15 @@ def convert_str_to_lst(expression: str):
                 output.append(character)
             else:
                 if character != '' and character != ' ' and character != temp_string:
-                    output.append(float(character))
+                    if float(character) != output[-1]:
+                        output.append(float(character))
                 break
     return output
 
 
 def handle_minus(expression_array: list):
+    if not expression_array:
+        raise SyntaxError("input must contain an expression")
     counter = 0
     temp_expression_array = expression_array
     if expression_array[counter] == '-':
@@ -181,10 +186,12 @@ def calculator2(revised_list: list) -> list:
                     pos -= 1
             pos += 1
         operator_list_for_kdimut.pop(-1)
+    if len(revised_list) > 1:
+        raise SyntaxError(f"{revised_list[1]} out of place")
     return revised_list
 
 try:
-    data = "3!-4"
+    data = "  6+    3"
     print(data)
     data = convert_str_to_lst(data)
     print(data)
@@ -193,5 +200,5 @@ try:
     data = bracket_handler(data)
     print(data)
     print(calculator2(data).pop(0))
-except Exception as e:
+except ArithmeticError as e:
     print(e)
