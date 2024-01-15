@@ -191,7 +191,7 @@ def calculator2(revised_list: list) -> list:
     return revised_list
 
 try:
-    data = "  6+    3"
+    data = "4   +   4"
     print(data)
     data = convert_str_to_lst(data)
     print(data)
@@ -200,5 +200,5 @@ try:
     data = bracket_handler(data)
     print(data)
     print(calculator2(data).pop(0))
-except ArithmeticError as e:
+except Exception as e:
     print(e)
