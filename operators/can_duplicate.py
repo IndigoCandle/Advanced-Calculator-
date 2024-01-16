@@ -5,48 +5,8 @@ factory = OperatorCreator()
 
 
 class Duplicate(SingleCharOps):
-
     duplicate_operators = {'-': ['_', '---', '+'],
                            '/': ['/', '=', '*']}
-
-
-def convert_str_to_lst(expression: str):
-    if not expression:
-        raise SyntaxError("expression can't be empty")
-    operators = factory.operator_list()
-    output = []
-    counter = -1
-    while counter < len(expression) - 1:
-        temp_string = ''
-        if counter < len(expression) - 1:
-            counter += 1
-            character = expression[counter]
-
-            while (counter < len(expression) and expression[counter] not in operators
-                   and expression[counter] != ')' and expression[counter] != '('):
-                if expression[counter] != ' ' and expression[counter] != '.' and expression[counter] != '   ':
-                    try:
-                        check = float(expression[counter])
-                    except ValueError:
-
-                        raise SyntaxError(f"could not convert {expression[counter]} to float - Illegal operator")
-                temp_string += expression[counter]
-                counter += 1
-
-            if temp_string != '' and temp_string != ' ':
-                try:
-                    output.append(float(temp_string))
-                except ValueError as e:
-                    raise SyntaxError(f"too many dots: {e}")
-            if counter < len(expression):
-                character = expression[counter]
-                output.append(character)
-            else:
-                if character != '' and character != ' ' and character != temp_string:
-                    if float(character) != output[-1]:
-                        output.append(float(character))
-                break
-    return output
 
 
 def run_for_element(expression: list, element: str, index: int):
@@ -100,6 +60,45 @@ def handle_minus(expression_array: list):
                         temp_expression_array.insert(counter, cur_element)
         counter += 1
     return temp_expression_array
+
+
+def convert_str_to_lst(expression: str):
+    if not expression:
+        raise SyntaxError("expression can't be empty")
+    operators = factory.operator_list()
+    output = []
+    counter = -1
+    while counter < len(expression) - 1:
+        temp_string = ''
+        if counter < len(expression) - 1:
+            counter += 1
+            character = expression[counter]
+
+            while (counter < len(expression) and expression[counter] not in operators
+                   and expression[counter] != ')' and expression[counter] != '('):
+                if expression[counter] != ' ' and expression[counter] != '.' and expression[counter] != '   ':
+                    try:
+                        check = float(expression[counter])
+                    except ValueError:
+
+                        raise SyntaxError(f"could not convert {expression[counter]} to float - Illegal operator")
+                temp_string += expression[counter]
+                counter += 1
+
+            if temp_string != '' and temp_string != ' ':
+                try:
+                    output.append(float(temp_string))
+                except ValueError as e:
+                    raise SyntaxError(f"{e} out of place")
+            if counter < len(expression):
+                character = expression[counter]
+                output.append(character)
+            else:
+                if character != '' and character != ' ' and character != temp_string:
+                    if float(character) != output[-1]:
+                        output.append(float(character))
+                break
+    return output
 
 
 data = "2+(///3!)"

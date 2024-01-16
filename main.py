@@ -3,42 +3,43 @@ from operators.operatorFactory import OperatorCreator
 factory = OperatorCreator()
 
 
-def convert_str_to_lst(expression: str):
+def convert(expression: str) -> list:
     if not expression:
         raise SyntaxError("expression can't be empty")
-    operators = factory.operator_list()
+    duplicates = factory.dup_operators()
+    bracket_counter = 0
+    index = 0
     output = []
-    counter = -1
-    while counter < len(expression) - 1:
-        temp_string = ''
-        if counter < len(expression) - 1:
-            counter += 1
-            character = expression[counter]
-
-            while (counter < len(expression) and expression[counter] not in operators
-                   and expression[counter] != ')' and expression[counter] != '('):
-                if expression[counter] != ' ' and expression[counter] != '.' and expression[counter] != '   ':
-                    try:
-                        check = float(expression[counter])
-                    except ValueError:
-
-                        raise SyntaxError(f"could not convert {expression[counter]} to float - Illegal operator")
-                temp_string += expression[counter]
-                counter += 1
-
-            if temp_string != '' and temp_string != ' ':
-                try:
-                    output.append(float(temp_string))
-                except ValueError as e:
-                    raise SyntaxError(f"{e} out of place")
-            if counter < len(expression):
-                character = expression[counter]
-                output.append(character)
-            else:
-                if character != '' and character != ' ' and character != temp_string:
-                    if float(character) != output[-1]:
-                        output.append(float(character))
-                break
+    curr_num = ''
+    while index < len(expression) and expression[index] in ['\t', ' ']:
+        index += 1
+    if index == len(expression):
+        raise SyntaxError("expression can't be empty")
+    updated_expression = expression[index:len(expression)]
+    for char in updated_expression:
+        if char in factory.operators or (char in ['(', ')']):
+            if curr_num not in ['\t', ' ', '']:
+                output.append(float(curr_num))
+                curr_num = ''
+            if (output and char not in duplicates and char == output[-1] and
+                    factory.operator_factory(char).position() != "Right"):
+                raise SyntaxError(f"operator {char} is illegal in this sequence")
+            output.append(char)
+        else:
+            curr_num += char
+        if char == '(':
+            bracket_counter += 1
+        elif char == ')':
+            bracket_counter -= 1
+    if bracket_counter > 0:
+        raise SyntaxError("Error - too many (")
+    elif bracket_counter < 0:
+        raise SyntaxError("Error - too many )")
+    if curr_num != '':
+        try:
+            output.append(float(curr_num))
+        except ValueError:
+            return output
     return output
 
 
@@ -80,8 +81,6 @@ def handle_minus(expression_array: list):
                         if temp_expression_array[counter - 1] not in factory.operators:
                             temp_expression_array.insert(counter, duplicate_operators.get(cur_element)[1])
                             temp_expression_array.insert(counter, cur_element)
-
-
                 else:
 
                     if (temp_expression_array[counter - 1] in factory.operators and
@@ -111,8 +110,7 @@ def bracket_handler(expression_lst: list) -> list:
                 if expression_lst[pos] != ')':
                     stack.append(expression_lst[pos])
                 pos += 1
-                if pos == len(expression_lst) and not stack:
-                    raise SyntaxError("too many (, not enough )")
+
                 if expression_lst[pos] == ')':
                     while not found_bracket and stack:
                         item_to_insert = stack.pop(-1)
@@ -120,12 +118,10 @@ def bracket_handler(expression_lst: list) -> list:
                             found_bracket = True
                         else:
                             send_temp_expression.insert(0, item_to_insert)
-                    if not found_bracket:
-                        raise SyntaxError("too many ), not enough (")
                     try:
                         stack.append((calculate(send_temp_expression)).pop())
                     except IndexError:
-                        raise SyntaxError(f"Brackets can't be empty: {expression_lst}")
+                        raise SyntaxError(f"Brackets can't be empty-> index {pos - 1} to {pos}")
                     found_bracket = False
                     send_temp_expression = []
                     if '(' not in stack:
@@ -135,8 +131,6 @@ def bracket_handler(expression_lst: list) -> list:
         if expression_lst[pos] != ')':
             result_expression.append(expression_lst[pos])
         pos += 1
-    if stack:
-        raise SyntaxError("too many (, not enough )")
     return result_expression
 
 
@@ -171,7 +165,7 @@ def calculate(revised_list: list) -> list:
                             raise SyntaxError(f"Syntax Error: {revised_list[pos]} can't be at index {pos}")
                         try:
                             result = operator.operation(revised_list[pos - 1], revised_list[pos + 1])
-                        except ArithmeticError as e:
+                        except (ArithmeticError, TypeError) as e:
                             raise ArithmeticError(e)
                         except IndexError:
                             raise SyntaxError(f"insufficient operands {revised_list}")
@@ -216,12 +210,23 @@ def calculate(revised_list: list) -> list:
 
 def main():
     while True:
-        expression = input("Enter and expression:")
-        expression = convert_str_to_lst(expression)
-        expression = handle_minus(expression)
-        expression = bracket_handler(expression)
-        print(f"Result: {calculate(expression).pop(0)}")
-        if input("Do another calculation? (yes/no): ").lower() != 'yes':
+        try:
+            expression = input("Enter and expression:")
+        except EOFError:
+            print("Please dont press ctrl+d :)")
+            break
+        except KeyboardInterrupt:
+            print("Please dont interrupt the process :(")
+            break
+        try:
+            expression = convert(expression)
+            expression = handle_minus(expression)
+            expression = bracket_handler(expression)
+            print(f"Result: {calculate(expression).pop(0)}")
+            if input("Do another calculation? (yes/no): ").lower() != 'yes':
+                break
+        except (SyntaxError, ValueError, IndexError, ArithmeticError, EOFError, KeyboardInterrupt) as e:
+            print(e)
             break
 
 
