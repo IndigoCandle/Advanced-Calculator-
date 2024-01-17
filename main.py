@@ -63,12 +63,14 @@ def handle_minus(expression_array: list):
     cur_element = expression_array[counter]
     if cur_element in duplicate_operators:
         duplicate_counter = run_for_element(temp_expression_array, cur_element, counter)
-
         if duplicate_counter > 0:
+            if temp_expression_array[counter] in factory.operator_list():
+                raise SyntaxError(f"{temp_expression_array[counter]} cant be after an Unari operator: {cur_element}")
             if duplicate_counter % 2 == 0:
                 counter -= 1
             else:
                 temp_expression_array.insert(0, duplicate_operators.get(cur_element)[0])
+
 
     while counter < len(temp_expression_array) - 1:
         duplicate_counter = 0
