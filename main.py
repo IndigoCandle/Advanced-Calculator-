@@ -3,25 +3,28 @@ from operators.operatorFactory import OperatorCreator
 factory = OperatorCreator()
 
 
+def is_digit(num_string):
+    num_string = num_string.replace(' ', '')
+    num_string = num_string.replace('\t', '')
+    return num_string.replace('.', '').isdigit()
+
+
 def convert(expression: str) -> list:
-    if not expression:
-        raise SyntaxError("expression can't be empty")
     duplicates = factory.dup_operators()
     bracket_counter = 0
-    index = 0
     output = []
     curr_num = ''
-    while index < len(expression) and expression[index] in ['\t', ' ']:
-        index += 1
-    if index == len(expression):
-        raise SyntaxError("expression can't be empty")
-    updated_expression = expression[index:len(expression)]
+    updated_expression = expression
     for char in updated_expression:
         if char in factory.operators or (char in ['(', ')']):
             if curr_num not in ['\t', ' ', '']:
-                output.append(float(curr_num))
+                if is_digit(curr_num):
+                    try:
+                        output.append(float(curr_num))
+                    except ValueError:
+                        raise SyntaxError("Error |  there can't be a space between two digits")
                 curr_num = ''
-            if (output and char not in duplicates and char == output[-1] and
+            if (output and char not in duplicates and char in factory.operator_list() and char == output[-1] and
                     factory.operator_factory(char).position() != "Right"):
                 raise SyntaxError(f"operator {char} is illegal in this sequence")
             output.append(char)
@@ -36,14 +39,12 @@ def convert(expression: str) -> list:
     elif bracket_counter < 0:
         raise SyntaxError("Error - too many )")
     if curr_num != '':
-        try:
+        if is_digit(curr_num):
             output.append(float(curr_num))
-        except ValueError:
-            return output
     return output
 
 
-def run_for_element(expression: list, element: str, index: int):
+def run_for_element(expression, element: str, index: int):
     duplicate_counter = 0
     while expression[index] == element:
         expression.pop(index)
@@ -70,7 +71,6 @@ def handle_minus(expression_array: list):
                 counter -= 1
             else:
                 temp_expression_array.insert(0, duplicate_operators.get(cur_element)[0])
-
 
     while counter < len(temp_expression_array) - 1:
         duplicate_counter = 0
@@ -121,7 +121,7 @@ def bracket_handler(expression_lst: list) -> list:
                         else:
                             send_temp_expression.insert(0, item_to_insert)
                     try:
-                        stack.append((calculate(send_temp_expression)).pop())
+                        stack.append((calculate(send_temp_expression)))
                     except IndexError:
                         raise SyntaxError(f"Brackets can't be empty-> index {pos - 1} to {pos}")
                     found_bracket = False
@@ -136,7 +136,7 @@ def bracket_handler(expression_lst: list) -> list:
     return result_expression
 
 
-def calculate(revised_list: list) -> list:
+def calculate(revised_list: list) -> float:
     operator_list_for_kdimut = factory.operator_list()
     curr_operator_list = []
     for element in revised_list:
@@ -206,29 +206,33 @@ def calculate(revised_list: list) -> list:
             pos += 1
         operator_list_for_kdimut.pop(-1)
     if len(revised_list) > 1:
-        raise SyntaxError(f"{revised_list[1]} out of place")
-    return revised_list
+        raise SyntaxError(f"Error | {revised_list[1]} out of place")
+    return revised_list.pop(0)
 
 
 def main():
     while True:
         try:
+            e = "   5"
+            print(is_digit(e))
             expression = input("Enter and expression:")
         except EOFError:
-            print("Please dont press ctrl+d :)")
+            print("\n Please dont press ctrl+d :)")
             break
         except KeyboardInterrupt:
-            print("Please dont interrupt the process :(")
+            print("\n Please dont interrupt the process :(")
             break
         try:
             expression = convert(expression)
             expression = handle_minus(expression)
             expression = bracket_handler(expression)
-            print(f"Result: {calculate(expression).pop(0)}")
+            #print(f"Result: {calculate(expression)}")
+            hi = calculate(expression)
+            print(hi == hi)
             if input("Do another calculation? (yes/no): ").lower() != 'yes':
                 break
-        except (SyntaxError, ValueError, IndexError, ArithmeticError, EOFError, KeyboardInterrupt) as e:
-            print(e)
+        except (KeyboardInterrupt) as e:
+            print(f"Error | {e}")
             break
 
 
