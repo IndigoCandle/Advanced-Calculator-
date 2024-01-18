@@ -2,8 +2,8 @@ from operators.TwoCharOps.TwoCharOps import TwoCharOps
 
 
 class Min(TwoCharOps):
-    def kdimut(self):
-        return 5
+    def __init__(self, kdimut=5):
+        super().__init__(kdimut)
 
     def operation(self, first_operand, second_operand):
         if first_operand < second_operand:

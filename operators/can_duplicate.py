@@ -101,8 +101,7 @@ def convert_str_to_lst(expression: str):
     return output
 
 
-data = "2+(///3!)"
-data = convert_str_to_lst(data)
-print(data)
-data = handle_minus(data)
-print(data)
+space = "       "
+for i in space:
+    if i == " ":
+        print("1")

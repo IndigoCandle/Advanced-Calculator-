@@ -2,10 +2,9 @@ from operators.singleCharOps.singleCharOps import SingleCharOps
 
 
 class SumOfNum(SingleCharOps):
+    def __init__(self, kdimut=6, position="Right", can_dup=True):
 
-    def kdimut(self):
-        return 6
-
+        super().__init__(kdimut, position, can_dup)
     def operation(self, operand: float) -> int:
         str_operand = str(operand)
         final_sum = 0
@@ -13,6 +12,3 @@ class SumOfNum(SingleCharOps):
             if num != '.':
                 final_sum += int(num)
         return final_sum
-
-    def position(self):
-        return "Right"

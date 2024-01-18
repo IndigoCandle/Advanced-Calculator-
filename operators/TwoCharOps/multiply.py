@@ -2,6 +2,9 @@ from operators.TwoCharOps.TwoCharOps import TwoCharOps
 
 
 class Mul(TwoCharOps):
+    def __init__(self, kdimut=2):
+        super().__init__(kdimut)
+
     def kdimut(self):
         return 2
 

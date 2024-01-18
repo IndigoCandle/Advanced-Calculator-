@@ -55,10 +55,8 @@ from main import *
     ("(100 $ 50 $ 25) - (10 & 5 & 3) + ~20", 77),
 ])
 def test_valid_expressions(expression, expected_result):
-    expression = convert(expression)
-    expression = handle_minus(expression)
-    expression = bracket_handler(expression)
-    assert calculate(expression) == expected_result
+
+    assert (Calculator(expression)).result == expected_result
 
 
 # Testing invalid expressions with expected exceptions

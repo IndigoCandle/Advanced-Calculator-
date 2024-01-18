@@ -2,6 +2,9 @@ from operators.singleCharOps.singleCharOps import SingleCharOps
 
 
 class Factorial(SingleCharOps):
+    def __init__(self, kdimut=6, position="Right", can_dup=True):
+
+        super().__init__(kdimut, position, can_dup)
 
     def kdimut(self):
         return 6

@@ -90,7 +90,7 @@ class Calculator:
 
                         if (temp_expression_array[counter - 1] in self.operator_list and
                                 self.factory.operator_factory(
-                                    temp_expression_array[counter - 1]).position() != "Right"):
+                                    temp_expression_array[counter - 1]).position != "Right"):
                             try:
                                 temp_expression_array.insert(counter, duplicate_operators.get(cur_element)[1])
                             except ArithmeticError as e:
@@ -142,7 +142,7 @@ class Calculator:
 
         for i in range(len(operator_list_for_kdimut)):
             pos = 0
-            kdimut = self.factory.operator_factory(operator_list_for_kdimut[-1]).kdimut()
+            kdimut = self.factory.operator_factory(operator_list_for_kdimut[-1]).kdimut
 
             while pos < len(revised_list):
                 if revised_list[pos] in operator_list_for_kdimut:
@@ -150,9 +150,9 @@ class Calculator:
                         operator = self.factory.operator_factory(revised_list[pos])
                     except ValueError as e:
                         raise SyntaxError(f"expression is illegal: {e}")
-                    curr_kdimut = operator.kdimut()
+                    curr_kdimut = operator.kdimut
                     if curr_kdimut == kdimut:
-                        if operator.position() == "Center":
+                        if operator.position == "Center":
                             if pos == 0:
                                 raise SyntaxError(f"Syntax Error: {revised_list[pos]} can't be at index {pos}")
                             try:
@@ -166,7 +166,7 @@ class Calculator:
                             except IndexError:
                                 raise SyntaxError(f"insufficient operands {revised_list}")
                             revised_list.insert(pos - 1, result)
-                        elif operator.position() == "Right":
+                        elif operator.position == "Right":
                             if pos - 1 < 0:
                                 raise SyntaxError(f"Operator {revised_list[pos]} is misplaced")
                             try:
@@ -175,7 +175,7 @@ class Calculator:
                                 raise SyntaxError(f"Error - {e}")
                             del revised_list[pos - 1:pos + 1]
                             revised_list.insert(pos - 1, result)
-                        elif operator.position() == "Left":
+                        elif operator.position == "Left":
                             if pos + 1 >= len(revised_list):
                                 raise SyntaxError(f"{revised_list[pos]} is misplaced")
                             find_next_operand = pos + 1
@@ -203,7 +203,7 @@ class Calculator:
         return self.calculate(data_list)
 
 
-print((Calculator("(100 $ 50 $ 25) - (10 & 5 & 3) + ~20")).result)
+print((Calculator("")).result)
 
 """
 def main():
