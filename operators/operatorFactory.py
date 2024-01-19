@@ -45,14 +45,18 @@ class OperatorCreator:
             list value:
                 [0] - unary version
                 [1] - sign version
-                [2] - result if sum of elements is even and not signed
         :return:
             dictionary of duplicate list
         """
-        duplicate_operators = {'-': ['UNARY_MINUS', 'SIGN_MINUS', '+']}
+        duplicate_operators = {'-': ['UNARY_MINUS', 'SIGN_MINUS']}
         return duplicate_operators
 
     def operator_factory(self, operator: str):
+        """
+        finds and creates a class matching "operator"
+        :param operator: a string of an operator
+        :return: instance of class operator
+        """
         operator_class = self.operators.get(operator)
         if operator_class:
             return operator_class()

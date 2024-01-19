@@ -1,5 +1,5 @@
 import pytest
-from calculator import *
+from Calculator.calculator import *
 
 
 # Testing valid expressions

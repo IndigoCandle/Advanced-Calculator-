@@ -2,8 +2,8 @@ from operators.TwoCharOps.TwoCharOps import TwoCharOps
 
 
 class Max(TwoCharOps):
-    def __init__(self, kdimut=5):
-        super().__init__(kdimut)
+    def __init__(self, precedence=5):
+        super().__init__(precedence)
 
     def operation(self, first_operand, second_operand):
         if first_operand > second_operand:

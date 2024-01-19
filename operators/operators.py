@@ -1,9 +1,5 @@
 class Operators:
-    def __init__(self, kdimut, position):
-        self.kdimut = kdimut
+    def __init__(self, precedence, position):
+        self.precedence = precedence
         self.position = position
-    def kdimut(self):
-        pass
 
-    def position(self):
-        pass

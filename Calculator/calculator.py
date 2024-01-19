@@ -55,7 +55,7 @@ class Calculator:
                 curr_num = ''
                 if (output and char not in self.duplicate_operators and char in self.operator_list and char == output[
                     -1] and
-                        self.factory.operator_factory(char).position() != "Right"):
+                        self.factory.operator_factory(char).position != "Right"):
                     raise SyntaxError(f"operator {char} is illegal in this sequence")
                 output.append(char)
             else:
@@ -198,7 +198,7 @@ class Calculator:
         for element in expression_list:
             if (element in self.operator_list and self.factory.operator_factory(element) not in
                     curr_kdimut_operator_list):
-                curr_kdimut_operator_list.append(self.factory.operator_factory(element).kdimut)
+                curr_kdimut_operator_list.append(self.factory.operator_factory(element).precedence)
         curr_kdimut_operator_list.sort()
 
         for i in range(len(curr_kdimut_operator_list)):
@@ -211,7 +211,7 @@ class Calculator:
                         operator = self.factory.operator_factory(expression_list[j])
                     except ValueError as e:
                         raise SyntaxError(f"expression is illegal: {e}")
-                    curr_kdimut = operator.kdimut
+                    curr_kdimut = operator.precedence
                     if curr_kdimut == kdimut:
                         if operator.position == "Center":
                             if j == 0:
@@ -241,7 +241,7 @@ class Calculator:
                                 raise SyntaxError(f"{expression_list[j]} is misplaced")
                             find_next_operand = j + 1
                             while (not isinstance(expression_list[find_next_operand], float) and not
-                                    isinstance(expression_list[find_next_operand], int) and
+                            isinstance(expression_list[find_next_operand], int) and
                                    find_next_operand < len(expression_list) - 1):
                                 find_next_operand += 1
                             result = operator.operation(expression_list[find_next_operand])
@@ -256,8 +256,11 @@ class Calculator:
         if len(expression_list) > 1:
             raise SyntaxError(f"Error | {expression_list[1]} out of place")
         result = expression_list.pop()
-        if result == int(result):
-            result = int(result)
+        try:
+            if result == int(result):
+                result = int(result)
+        except OverflowError:
+            return result
         return result
 
     def solve(self):
@@ -267,34 +270,5 @@ class Calculator:
         return self.calculate(data_list)
 
 
-print((Calculator("(100 $ 50 $ 25) - (10 & 5 & 3) + ~20")).result)
-
-"""
-def main():
-    while True:
-        try:
-            e = "   5"
-            print(is_digit(e))
-            expression = input("Enter and expression:")
-        except EOFError:
-            print("\n Please dont press ctrl+d :)")
-            break
-        except KeyboardInterrupt:
-            print("\n Please dont interrupt the process :(")
-            break
-        try:
-            expression = convert(expression)
-            expression = handle_minus(expression)
-            expression = bracket_handler(expression)
-            # print(f"Result: {calculate(expression)}")
-            hi = calculate(expression)
-            print(hi == hi)
-            if input("Do another calculation? (yes/no): ").lower() != 'yes':
-                break
-        except (KeyboardInterrupt) as e:
-            print(f"Error | {e}")
-            break
 
 
-if __name__ == "__main__":
-    main()"""

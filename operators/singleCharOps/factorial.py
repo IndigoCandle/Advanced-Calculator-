@@ -19,7 +19,7 @@ class Factorial(SingleCharOps):
 
         fact = 1
         for i in range(1, operand + 1):
-            fact *= i
+                fact *= i
         return fact
 
     def position(self):
