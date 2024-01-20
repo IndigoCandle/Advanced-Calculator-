@@ -1,6 +1,6 @@
 import math
 
-from operators.TwoCharOps.TwoCharOps import TwoCharOps
+from operators.Binary_operators.TwoCharOps import TwoCharOps
 
 
 class pow(TwoCharOps):

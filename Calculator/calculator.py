@@ -1,4 +1,5 @@
 from operators.operatorFactory import OperatorCreator
+from operators.single_operand_operators.singleCharOps import SingleCharOps
 
 
 class Calculator:
@@ -19,6 +20,7 @@ class Calculator:
         duplicate_operators: a dictionary of duplicatable operators and their forms
         result: final result of the operation.
         """
+        expression = str(expression)
         self.expression = expression
         self.factory = OperatorCreator()
         self.operator_list = self.factory.operator_list()
@@ -53,10 +55,11 @@ class Calculator:
                     except ValueError:
                         raise SyntaxError("Error |  there can't be a space between two digits")
                 curr_num = ''
-                if (output and char not in self.duplicate_operators and char in self.operator_list and char == output[
-                    -1] and
-                        self.factory.operator_factory(char).position != "Right"):
-                    raise SyntaxError(f"operator {char} is illegal in this sequence")
+                if output and char not in self.duplicate_operators and char in self.operator_list:
+                    curr_op_class = self.factory.operator_factory(char)
+                    if isinstance(curr_op_class, SingleCharOps) and not curr_op_class.can_dup and char == output[-1]:
+                        raise SyntaxError(f"operator {char} is illegal in this sequence")
+
                 output.append(char)
             else:
                 curr_num += char
@@ -124,7 +127,9 @@ class Calculator:
                 if duplicate_counter > 0:
                     if duplicate_counter % 2 == 0:
                         if temp_expression_array[i - 1] != '(':
-                            if temp_expression_array[i - 1] not in self.operator_list:
+                            if ((temp_expression_array[i - 1] in self.operator_list and
+                                self.factory.operator_factory(temp_expression_array[i - 1]).position == "Right") or
+                                    temp_expression_array[i - 1] not in self.operator_list):
                                 temp_expression_array.insert(i, duplicate_operators.get(cur_element)[1])
                                 temp_expression_array.insert(i, cur_element)
                     else:
@@ -245,8 +250,9 @@ class Calculator:
                                    find_next_operand < len(expression_list) - 1):
                                 find_next_operand += 1
                             result = operator.operation(expression_list[find_next_operand])
-                            del expression_list[j:j + 2]
-                            expression_list.insert(j, result)
+                            expression_list.pop(j)
+                            expression_list.pop(find_next_operand-1)
+                            expression_list.insert(find_next_operand-1, result)
                         else:
                             raise SyntaxError("Operator doesn't have a position")
 

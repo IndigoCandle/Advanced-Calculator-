@@ -1,13 +1,10 @@
-from operators.singleCharOps.singleCharOps import SingleCharOps
+from operators.single_operand_operators.singleCharOps import SingleCharOps
 
 
 class Factorial(SingleCharOps):
-    def __init__(self, kdimut=6, position="Right", can_dup=True):
+    def __init__(self, precedence=6, position="Right", can_dup=True):
 
-        super().__init__(kdimut, position, can_dup)
-
-    def kdimut(self):
-        return 6
+        super().__init__(precedence, position, can_dup)
 
     def operation(self, operand):
         if operand - int(operand) == 0:
@@ -19,8 +16,5 @@ class Factorial(SingleCharOps):
 
         fact = 1
         for i in range(1, operand + 1):
-                fact *= i
+            fact *= i
         return fact
-
-    def position(self):
-        return "Right"

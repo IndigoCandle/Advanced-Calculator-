@@ -1,17 +1,17 @@
-from operators.TwoCharOps.power import pow
-from operators.TwoCharOps.Modulo import Mod
-from operators.TwoCharOps.Maximum import Max
-from operators.TwoCharOps.Minimum import Min
-from operators.TwoCharOps.Minus.minus import Minus
-from operators.TwoCharOps.average import Avg
-from operators.TwoCharOps.divide import Div
-from operators.TwoCharOps.multiply import Mul
-from operators.TwoCharOps.plus import Plus
-from operators.singleCharOps.SumOfNums import SumOfNum
-from operators.singleCharOps.Unari import UnariMinus
-from operators.singleCharOps.Tilda import Tilda
-from operators.singleCharOps.factorial import Factorial
-from operators.singleCharOps.Sign_Minus import SignMinus
+from operators.Binary_operators.power import pow
+from operators.Binary_operators.Modulo import Mod
+from operators.Binary_operators.Maximum import Max
+from operators.Binary_operators.Minimum import Min
+from operators.Binary_operators.Minus.minus import Minus
+from operators.Binary_operators.average import Avg
+from operators.Binary_operators.divide import Div
+from operators.Binary_operators.multiply import Mul
+from operators.Binary_operators.plus import Plus
+from operators.single_operand_operators.SumOfNums import SumOfNum
+from operators.single_operand_operators.Minus.Unari import UnariMinus
+from operators.single_operand_operators.Tilda import Tilda
+from operators.single_operand_operators.factorial import Factorial
+from operators.single_operand_operators.Minus.Sign_Minus import SignMinus
 
 
 class OperatorCreator:
@@ -29,6 +29,7 @@ class OperatorCreator:
                  "#": SumOfNum,
                  "UNARY_MINUS": UnariMinus,
                  "SIGN_MINUS": SignMinus}
+    operator_classes = {}
 
     @staticmethod
     def operator_list():
@@ -59,6 +60,10 @@ class OperatorCreator:
         """
         operator_class = self.operators.get(operator)
         if operator_class:
-            return operator_class()
+            if operator in self.operator_classes:
+                return self.operator_classes.get(operator)
+            curr_op_class = operator_class()
+            self.operator_classes[operator] = curr_op_class
+            return curr_op_class
         else:
             raise ValueError(f"Unknown operator type: {operator_class}")
