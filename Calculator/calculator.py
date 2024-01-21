@@ -223,8 +223,10 @@ class Calculator:
                                 raise SyntaxError(f"Syntax Error: {expression_list[j]} can't be at index {j}")
                             try:
                                 result = operator.operation(expression_list[j - 1], expression_list[j + 1])
-                            except (ArithmeticError, TypeError) as e:
-                                raise ArithmeticError(e)
+                            except ZeroDivisionError as e:
+                                raise ZeroDivisionError(f"{e} at index {j-1}")
+                            except (ArithmeticError, TypeError):
+                                raise SyntaxError(f"{expression_list[j]} is illegal in this position")
                             except IndexError:
                                 raise SyntaxError(f"insufficient operands {expression_list}")
                             try:

@@ -9,3 +9,7 @@ class Operators:
         self.precedence = precedence
         self.position = position
 
+    def operation(self, *args):
+        pass
+
+
