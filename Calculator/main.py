@@ -20,7 +20,7 @@ def main():
 
             if input("Do another calculation? (yes/no): ").lower() != 'yes':
                 break
-        except (KeyboardInterrupt) as e:
+        except (Exception) as e:
             print(f"Error | {e}")
             break
 

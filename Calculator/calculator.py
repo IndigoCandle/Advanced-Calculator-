@@ -1,3 +1,4 @@
+from Calculator.Exceptions import EmptyExpression
 from operators.operatorFactory import OperatorCreator
 from operators.single_operand_operators.singleCharOps import SingleCharOps
 
@@ -62,6 +63,8 @@ class Calculator:
                     except ValueError:
                         raise SyntaxError(f"Error |  there can't be a space between two digits 🙈 {curr_num}")
                 curr_num = ''
+                # checks if the operators are in a legal order. Takes duplicatable and right oriented operators into
+                # consideration.
                 if output and char not in self.duplicate_operators and check_output_char(char):
                     curr_op_class = self.factory.operator_factory(char)
                     if ((isinstance(curr_op_class, SingleCharOps) and not curr_op_class.can_dup and char == output[-1])
@@ -117,7 +120,7 @@ class Calculator:
         :return: A list with all the duplicates handled, deleted and replaced.
         """
         if not expression_array:
-            raise SyntaxError("input must contain an expression")
+            raise EmptyExpression("input must contain an expression")
         duplicate_operators = self.duplicate_operators
         i = 0
         temp_expression_array = expression_array
