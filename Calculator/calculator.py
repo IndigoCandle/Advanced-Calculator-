@@ -40,7 +40,7 @@ class Calculator:
         num_string = num_string.replace('\t', '')
         return num_string.replace('.', '').isdigit()
 
-    def check_output_index(self, list_to_check: list, index: int) -> bool:
+    def index_is_operator(self, list_to_check: list, index: int) -> bool:
         """
         checks if an
         :param list_to_check:
@@ -49,7 +49,7 @@ class Calculator:
         """
         return list_to_check[index] in self.operator_list
 
-    def check_output_char(self, element):
+    def element_is_operator(self, element):
         return element in self.operator_list
 
     def convert(self) -> list:
@@ -69,7 +69,7 @@ class Calculator:
             return True
 
         for char in self.expression:
-            if self.check_output_char(char) or (char in ['(', ')']):
+            if self.element_is_operator(char) or (char in ['(', ')']):
                 if self.is_digit(curr_num):
                     try:
                         output.append(float(curr_num))
@@ -78,11 +78,11 @@ class Calculator:
                 curr_num = ''
                 # checks if the operators are in a legal order. Takes duplicatable and right oriented operators into
                 # consideration.
-                if output and char not in self.duplicate_operators and self.check_output_char(char):
+                if output and char not in self.duplicate_operators and self.element_is_operator(char):
                     curr_op_class = self.factory.operator_factory(char)
                     if ((isinstance(curr_op_class, SingleCharOps) and not curr_op_class.can_dup and char == output[-1])
                             or (output[-1] in self.operator_list and char != output[-1] and not in_range(-2) or
-                                (self.check_output_index(output, -1) and self.check_output_index(output, -2) and not
+                                (self.index_is_operator(output, -1) and self.index_is_operator(output, -2) and not
                                 self.factory.operator_factory(output[-2]).position == "Right"))):
                         raise SyntaxError(f"operator {char} is illegal in this sequence 😉")
 
@@ -120,7 +120,7 @@ class Calculator:
         while expression[index] == element:
             expression.pop(index)
             duplicate_counter += 1
-        if self.check_output_index(expression, index) and duplicate_counter > 1:
+        if self.index_is_operator(expression, index) and duplicate_counter > 1:
             raise SyntaxError(
                 f"there can't be multiple recurrences of {element} before another operator: {expression[index]}")
         return duplicate_counter
@@ -141,7 +141,7 @@ class Calculator:
         if cur_element in duplicate_operators:
             duplicate_counter = self.run_for_element(temp_expression_array, cur_element, i)
             if duplicate_counter > 0:
-                if self.check_output_index(temp_expression_array, i):
+                if self.index_is_operator(temp_expression_array, i):
                     raise SyntaxError(
                         f"{temp_expression_array[i]} cant be after an Unari operator: {cur_element} 😉")
                 if duplicate_counter % 2 == 0:
@@ -156,14 +156,14 @@ class Calculator:
                 if duplicate_counter > 0:
                     if duplicate_counter % 2 == 0:
                         if temp_expression_array[i - 1] != '(':
-                            if ((self.check_output_index(temp_expression_array, i - 1) and
+                            if ((self.index_is_operator(temp_expression_array, i - 1) and
                                  self.factory.operator_factory(temp_expression_array[i - 1]).position == "Right") or
-                                    not self.check_output_index(temp_expression_array, i - 1)):
+                                    not self.index_is_operator(temp_expression_array, i - 1)):
                                 temp_expression_array.insert(i, duplicate_operators.get(cur_element)[1])
                                 temp_expression_array.insert(i, cur_element)
                     else:
 
-                        if (self.check_output_index(temp_expression_array, i - 1) and
+                        if (self.index_is_operator(temp_expression_array, i - 1) and
                                 self.factory.operator_factory(
                                     temp_expression_array[i - 1]).position != "Right"):
                             try:
@@ -230,7 +230,7 @@ class Calculator:
         """
         curr_kdimut_operator_list = []
         for element in expression_list:
-            if (self.check_output_char(element) and self.factory.operator_factory(element) not in
+            if (self.element_is_operator(element) and self.factory.operator_factory(element) not in
                     curr_kdimut_operator_list):
                 curr_kdimut_operator_list.append(self.factory.operator_factory(element).precedence)
         curr_kdimut_operator_list.sort()
@@ -240,7 +240,7 @@ class Calculator:
             kdimut = curr_kdimut_operator_list[-1]
 
             while j < len(expression_list):
-                if self.check_output_index(expression_list, j):
+                if self.index_is_operator(expression_list, j):
                     try:
                         operator = self.factory.operator_factory(expression_list[j])
                     except ValueError as e:
