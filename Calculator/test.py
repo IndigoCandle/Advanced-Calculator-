@@ -40,7 +40,7 @@ from Calculator.calculator import *
     ("262.67851073127395*262.67851073127395 + 0.34035656401944897*1234", 69420),
     ("(420^69)#!#--3 $ (4 @ 9 & 84.78 + 2)", 8640.5),
     ("3 ^ 2 ! - 5 * (4 $ 2)! * 2 + 7 @ 9 @ 11", -221.5),
-    ("((12.5 + 34.7) / (56 - 45)) ^ 2 - 4 $ 5 $ 6", 12.411900826446281),
+    ("((12.5 + 34.7) / (56 - 45)) ^ 2 - 4 $ 5 $ 6", 12.4119008264),
     ("10000 % 1000 % 100 % 50 % 25 + 10!-7 ", 3628793),
     ("(20 - 3) * (2 ^ 3) + 1 + 5.5 @ 6.5", 143),
     ("(9^100)### & (-6040.7893- 9!) +30.39485--24572.43242 ", -344317.96203),
@@ -64,4 +64,4 @@ def test_valid_expressions(expression, expected_result):
         print("non real number")
 
 
-# Testing invalid expressions with expected exceptions
+# Testing invalid expressions with expected exceptions

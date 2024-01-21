@@ -1,4 +1,4 @@
-from Calculator import calculator
+
 from Calculator.calculator import Calculator
 
 
@@ -16,11 +16,10 @@ def main():
         try:
             result = Calculator(expression).result
             print(result)
-            # print(f"Result: {calculate(expression)}")
 
             if input("Do another calculation? (yes/no): ").lower() != 'yes':
                 break
-        except (Exception) as e:
+        except Exception as e:
             print(f"Error | {e}")
             break
 

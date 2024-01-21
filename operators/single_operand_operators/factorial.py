@@ -7,6 +7,7 @@ class Factorial(SingleCharOps):
         super().__init__(precedence, position, can_dup)
 
     def operation(self, operand):
+        round(operand, 10)
         if operand - int(operand) == 0:
             operand = int(operand)
         if operand < 0:
