@@ -47,18 +47,28 @@ class Calculator:
         bracket_counter = 0
         output = []
         curr_num = ''
+
+        def check_output_index(index):
+            return output[index] in self.operator_list
+
+        def check_output_char(element):
+            return element in self.operator_list
+
         for char in self.expression:
-            if char in self.operator_list or (char in ['(', ')']):
+            if check_output_char(char) or (char in ['(', ')']):
                 if self.is_digit(curr_num):
                     try:
                         output.append(float(curr_num))
                     except ValueError:
-                        raise SyntaxError("Error |  there can't be a space between two digits")
+                        raise SyntaxError(f"Error |  there can't be a space between two digits 🙈 {curr_num}")
                 curr_num = ''
-                if output and char not in self.duplicate_operators and char in self.operator_list:
+                if output and char not in self.duplicate_operators and check_output_char(char):
                     curr_op_class = self.factory.operator_factory(char)
-                    if isinstance(curr_op_class, SingleCharOps) and not curr_op_class.can_dup and char == output[-1]:
-                        raise SyntaxError(f"operator {char} is illegal in this sequence")
+                    if ((isinstance(curr_op_class, SingleCharOps) and not curr_op_class.can_dup and char == output[-1])
+                            or (output[-1] in self.operator_list and char != output[-1] and check_output_index(-1) and
+                                check_output_index(-2) and not
+                                self.factory.operator_factory(output[-2]).position == "Right")):
+                        raise SyntaxError(f"operator {char} is illegal in this sequence 😉")
 
                 output.append(char)
             else:
@@ -73,7 +83,10 @@ class Calculator:
             raise SyntaxError("Error - too many )")
         if curr_num != '':
             if self.is_digit(curr_num):
-                output.append(float(curr_num))
+                try:
+                    output.append(float(curr_num))
+                except ValueError:
+                    raise SyntaxError(f"Error |  there can't be a space between two digits 🙈 {curr_num}")
         return output
 
     def run_for_element(self, expression: list, element: str, index: int):
@@ -114,7 +127,7 @@ class Calculator:
             if duplicate_counter > 0:
                 if temp_expression_array[i] in self.operator_list:
                     raise SyntaxError(
-                        f"{temp_expression_array[i]} cant be after an Unari operator: {cur_element}")
+                        f"{temp_expression_array[i]} cant be after an Unari operator: {cur_element} 😉")
                 if duplicate_counter % 2 == 0:
                     i -= 1
                 else:
@@ -128,7 +141,7 @@ class Calculator:
                     if duplicate_counter % 2 == 0:
                         if temp_expression_array[i - 1] != '(':
                             if ((temp_expression_array[i - 1] in self.operator_list and
-                                self.factory.operator_factory(temp_expression_array[i - 1]).position == "Right") or
+                                 self.factory.operator_factory(temp_expression_array[i - 1]).position == "Right") or
                                     temp_expression_array[i - 1] not in self.operator_list):
                                 temp_expression_array.insert(i, duplicate_operators.get(cur_element)[1])
                                 temp_expression_array.insert(i, cur_element)
@@ -224,9 +237,9 @@ class Calculator:
                             try:
                                 result = operator.operation(expression_list[j - 1], expression_list[j + 1])
                             except ZeroDivisionError as e:
-                                raise ZeroDivisionError(f"{e} at index {j-1}")
+                                raise ZeroDivisionError(f"{e} at index {j - 1}")
                             except (ArithmeticError, TypeError):
-                                raise SyntaxError(f"{expression_list[j]} is illegal in this position")
+                                raise SyntaxError(f"{expression_list[j]} is illegal in this position 🧐")
                             except IndexError:
                                 raise SyntaxError(f"insufficient operands {expression_list}")
                             try:
@@ -236,7 +249,7 @@ class Calculator:
                             expression_list.insert(j - 1, result)
                         elif operator.position == "Right":
                             if j - 1 < 0:
-                                raise SyntaxError(f"Operator {expression_list[j]} is misplaced")
+                                raise SyntaxError(f"Operator {expression_list[j]} is misplaced 😡")
                             try:
                                 result = operator.operation(expression_list[j - 1])
                             except ValueError as e:
@@ -245,7 +258,7 @@ class Calculator:
                             expression_list.insert(j - 1, result)
                         elif operator.position == "Left":
                             if j + 1 >= len(expression_list):
-                                raise SyntaxError(f"{expression_list[j]} is misplaced")
+                                raise SyntaxError(f"{expression_list[j]} is misplaced 😡")
                             find_next_operand = j + 1
                             while (not isinstance(expression_list[find_next_operand], float) and not
                             isinstance(expression_list[find_next_operand], int) and
@@ -253,16 +266,16 @@ class Calculator:
                                 find_next_operand += 1
                             result = operator.operation(expression_list[find_next_operand])
                             expression_list.pop(j)
-                            expression_list.pop(find_next_operand-1)
-                            expression_list.insert(find_next_operand-1, result)
+                            expression_list.pop(find_next_operand - 1)
+                            expression_list.insert(find_next_operand - 1, result)
                         else:
-                            raise SyntaxError("Operator doesn't have a position")
+                            raise SyntaxError("Operator doesn't have a position 👨‍🦯")
 
                         j -= 1
                 j += 1
             curr_kdimut_operator_list.pop()
         if len(expression_list) > 1:
-            raise SyntaxError(f"Error | {expression_list[1]} out of place")
+            raise SyntaxError(f"Error | {expression_list[1]} out of place 😡")
         result = expression_list.pop()
         try:
             if result == int(result):
@@ -276,7 +289,3 @@ class Calculator:
         data_list = self.handle_duplicates(data_list)
         data_list = self.bracket_handler(data_list)
         return self.calculate(data_list)
-
-
-
-
