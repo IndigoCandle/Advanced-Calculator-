@@ -18,6 +18,7 @@ class SumOfNum(SingleCharOps):
         if operand < 0:
             raise InvalidOutput("# can't operate on negative numbers")
         operand_str = str(operand)
+
         final_sum = 0
         e_found = False
         for num in operand_str:

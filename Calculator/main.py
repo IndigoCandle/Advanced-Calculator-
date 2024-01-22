@@ -28,8 +28,10 @@ def main():
             print(int(result))
         else:
             print(result)
-
-        if input("Do another calculation? (yes/no): ").lower() != 'yes':
+        try:
+            if input("Do another calculation? (yes/no): ").lower() != 'yes':
+                break
+        except (KeyboardInterrupt, EOFError):
             break
 
 
