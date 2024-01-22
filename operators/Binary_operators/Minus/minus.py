@@ -6,4 +6,7 @@ class Minus(TwoCharOps):
         super().__init__(1)
 
     def operation(self, first_operand, second_operand):
+        """
+        return first operand minus second operand
+        """
         return first_operand - second_operand

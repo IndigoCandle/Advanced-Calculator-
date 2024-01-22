@@ -42,10 +42,7 @@ class Calculator:
 
     def index_is_operator(self, list_to_check: list, index: int) -> bool:
         """
-        checks if an
-        :param list_to_check:
-        :param index:
-        :return:
+        checks if an index in a list is an operator.
         """
         return list_to_check[index] in self.operator_list
 
@@ -55,6 +52,8 @@ class Calculator:
     def convert(self) -> list:
         """
         converts a string(expression) to a list. counts brackets and performs several syntax checks.
+
+        :raises SyntaxError: improper expression.
         :return: a list representing the expression
         """
         bracket_counter = 0
@@ -69,11 +68,15 @@ class Calculator:
             return True
 
         def is_dup(curr_op_class):
+            """
+            checks if an operator is duplicatable.
+            """
             return isinstance(curr_op_class, SingleCharOps) and not curr_op_class.can_dup
 
         def check_can_dup():
             """
             Checks if an operator is in correct syntax.
+
             :raise: Syntax if the operator is unari, cant duplicate and the previous
             item inserted to the list(output) is the same as him. or if he isn't an unari operator and the item
             before him isn't the same as him.
@@ -130,6 +133,7 @@ class Calculator:
         :param expression: a list to run on
         :param element: element to operate on
         :param index: the index of expression to start from
+        :raises SyntaxError: improper expression.
         :return: duplicate_counter - the amount of elements in a row in expression from index
         """
         duplicate_counter = 0
@@ -145,7 +149,9 @@ class Calculator:
         """
         handles all the duplicate types from dup_operators. finds all the duplicates instances,
         deletes them and replaces them accordingly.
-        :param expression_array: the mathematical expression as a list
+
+        :param expression_array: the mathematical expression as a list.
+        :raises SyntaxError: improper expression.
         :return: A list with all the duplicates handled, deleted and replaced.
         """
         if not expression_array:
@@ -200,6 +206,7 @@ class Calculator:
         are replaced with the result resulted from calculate().
 
         :param expression_lst: a mathematical expression in the form of a list
+        :raises SyntaxError: improper expression
         :return: An expression list without any brackets.
         """
         send_temp_expression = []
@@ -241,8 +248,13 @@ class Calculator:
         """
         Accepts an expression without any brackets. Finds all the operators, inserts them sorted according to their
         precedence. loops for each precedence from the end, removes the current operation and inserts the result.
+        will loop for every precedence.
+
         :param expression_list: Mathematical expression without any brackets
-        :return: result(int/float)
+        :raises SyntaxError: improper expression
+        :raises ZeroDivisionError: division by zero
+        :raises OverFlowError: number too large to convert to float ->
+        inf. int returns wrong results for very big numbers, must convert to float. :return: result(int/float)
         """
         curr_kdimut_operator_list = []
         for element in expression_list:

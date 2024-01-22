@@ -1,3 +1,4 @@
+from Calculator.Exceptions import *
 from Calculator.calculator import Calculator
 
 
@@ -14,17 +15,19 @@ def main():
             break
         try:
             result = Calculator(expression).result
-            int_result_str = str(int(result))
-            float_result_str = str(result)
-            if int_result_str.__eq__(float_result_str):
-                print(int(result))
-            else:
-                print(result)
-        except (KeyboardInterrupt, SyntaxError) as e:
+
+        except (
+                KeyboardInterrupt,EOFError, SyntaxError, ZeroDivisionError, ArithmeticError, EmptyExpression,
+                InvalidOutput, OverflowError, TypeError) as e:
             print(f"{e}")
             break
 
-        print(result)
+        int_result_str = str(int(result))
+        float_result_str = str(result)
+        if int_result_str.__eq__(float_result_str):
+            print(int(result))
+        else:
+            print(result)
 
         if input("Do another calculation? (yes/no): ").lower() != 'yes':
             break

@@ -9,9 +9,14 @@ class pow(TwoCharOps):
         super().__init__(precedence)
 
     def operation(self, first_operand, second_operand):
+        """
+        raises a first_operand by the power of second_operand.
+
+        :raises InvalidOutput: number is too big or imaginary.
+        """
         try:
             return math.pow(first_operand, second_operand)
-        except ArithmeticError as e:
-            raise InvalidOutput(f"Error ||  {e} - sorry, please try a smaller number :/")
+        except ArithmeticError:
+            raise InvalidOutput(f"inf")
         except ValueError:
             raise InvalidOutput(f"This calculator doesnt support imaginary numbers 😅")

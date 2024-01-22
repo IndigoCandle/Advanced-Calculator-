@@ -7,6 +7,11 @@ class Factorial(SingleCharOps):
         super().__init__(precedence, position, can_dup)
 
     def operation(self, operand):
+        """
+        returns the factorial of operand
+        :raises ValueError: ! does not support operations on negative numbers
+        :raises ValueError: ! does not support operations on float types
+        """
         operand = round(operand, 10)
         if operand - int(operand) == 0:
             operand = int(operand)

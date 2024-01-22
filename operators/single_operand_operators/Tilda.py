@@ -6,4 +6,8 @@ class Tilda(SingleCharOps):
         super().__init__(precedence, position, can_dup)
 
     def operation(self, operand):
+        """
+        reverses the sign of operand.
+        
+        """""
         return -1 * operand

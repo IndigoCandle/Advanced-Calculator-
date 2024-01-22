@@ -33,6 +33,9 @@ class OperatorCreator:
 
     @staticmethod
     def operator_list():
+        """
+        list of all the operators
+        """
         operators = ['+', '-', '*', '/', 'UNARY_MINUS', '^', '%', '@', '$', '&', '~', '!', '#', 'SIGN_MINUS']
         return operators
 
@@ -55,7 +58,9 @@ class OperatorCreator:
     def operator_factory(self, operator: str):
         """
         finds and creates a class matching "operator"
+
         :param operator: a string of an operator
+        :raises ValueError: if an operator type doesn't have a class/not in operator class dictionary.
         :return: instance of class operator
         """
         operator_class = self.operators.get(operator)
@@ -66,4 +71,4 @@ class OperatorCreator:
             self.operator_classes[operator] = curr_op_class
             return curr_op_class
         else:
-            raise ValueError(f"Unknown operator type: {operator_class}")
+            raise TypeError(f"Unknown operator type: {operator_class}")

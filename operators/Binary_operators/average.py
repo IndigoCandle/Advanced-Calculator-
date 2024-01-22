@@ -6,6 +6,9 @@ class Avg(TwoCharOps):
         super().__init__(precedence)
 
     def operation(self, first_operand, second_operand):
-        sum = first_operand + second_operand
-        return sum / 2
+        """
+        return average of two operands
+        """
+        sum_together = first_operand + second_operand
+        return sum_together / 2
 

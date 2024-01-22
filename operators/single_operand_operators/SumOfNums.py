@@ -10,8 +10,10 @@ class SumOfNum(SingleCharOps):
     def operation(self, operand: float) -> int:
         """
         operator # only operates until the letter e. calculates the sum of all digits.
+
         :param operand: number to operate on.
-        :return:
+        :raises InvalidOutput: # can't operate on negative numbers
+        :return:sum of all digits
         """
         if operand < 0:
             raise InvalidOutput("# can't operate on negative numbers")
