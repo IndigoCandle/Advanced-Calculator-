@@ -8,14 +8,21 @@ class SumOfNum(SingleCharOps):
         super().__init__(precedence, position, can_dup)
 
     def operation(self, operand: float) -> int:
+        """
+        operator # only operates until the letter e. calculates the sum of all digits.
+        :param operand: number to operate on.
+        :return:
+        """
         if operand < 0:
             raise InvalidOutput("# can't operate on negative numbers")
-        try:
-            formatted_operand = format(operand, '.10f')
-        except OverflowError as e:
-            formatted_operand = str(operand)
+        operand_str = str(operand)
         final_sum = 0
-        for num in formatted_operand:
-            if num != '.':
-                final_sum += int(num)
+        e_found = False
+        for num in operand_str:
+            if not e_found:
+                if num == 'e':
+                    e_found = True
+                else:
+                    if num != '.':
+                        final_sum += int(num)
         return final_sum

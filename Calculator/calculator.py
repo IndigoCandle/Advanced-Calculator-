@@ -68,6 +68,29 @@ class Calculator:
                 return False
             return True
 
+        def is_dup(curr_op_class):
+            return isinstance(curr_op_class, SingleCharOps) and not curr_op_class.can_dup
+
+        def check_can_dup():
+            """
+            Checks if an operator is in correct syntax.
+            :raise: Syntax if the operator is unari, cant duplicate and the previous
+            item inserted to the list(output) is the same as him. or if he isn't an unari operator and the item
+            before him isn't the same as him.
+            :return: void
+            """
+            if output and char not in self.duplicate_operators and self.element_is_operator(char):
+
+                curr_op_class = self.factory.operator_factory(char)
+                # item can dup
+                if ((is_dup(curr_op_class) and char == output[-1])
+                        or (output[-1] in self.operator_list and char != output[-1] and not in_range(-2) or
+                            (self.index_is_operator(output, -1) and
+                            (not in_range(-2) or self.index_is_operator(output, -2) and is_dup(curr_op_class)) and not
+                             (not in_range(-2) or not self.factory.operator_factory(output[-2]).position == "Right")))):
+
+                    raise SyntaxError(f"operator {char} is illegal in this sequence 😉")
+
         for char in self.expression:
             if self.element_is_operator(char) or (char in ['(', ')']):
                 if self.is_digit(curr_num):
@@ -78,14 +101,7 @@ class Calculator:
                 curr_num = ''
                 # checks if the operators are in a legal order. Takes duplicatable and right oriented operators into
                 # consideration.
-                if output and char not in self.duplicate_operators and self.element_is_operator(char):
-                    curr_op_class = self.factory.operator_factory(char)
-                    if ((isinstance(curr_op_class, SingleCharOps) and not curr_op_class.can_dup and char == output[-1])
-                            or (output[-1] in self.operator_list and char != output[-1] and not in_range(-2) or
-                                (self.index_is_operator(output, -1) and self.index_is_operator(output, -2) and not
-                                self.factory.operator_factory(output[-2]).position == "Right"))):
-                        raise SyntaxError(f"operator {char} is illegal in this sequence 😉")
-
+                check_can_dup()
                 output.append(char)
             else:
                 curr_num += char
@@ -251,13 +267,15 @@ class Calculator:
                             if j == 0:
                                 raise SyntaxError(f"Syntax Error: {expression_list[j]} can't be at index {j}")
                             try:
-                                result = operator.operation(expression_list[j - 1], expression_list[j + 1])
+                                result = float(operator.operation(expression_list[j - 1], expression_list[j + 1]))
                             except ZeroDivisionError as e:
                                 raise ZeroDivisionError(f"{e} at index {j - 1}")
                             except (ArithmeticError, TypeError):
                                 raise SyntaxError(f"{expression_list[j]} is illegal in this position 🧐")
                             except IndexError:
                                 raise SyntaxError(f"insufficient operands {expression_list}")
+                            except OverflowError:
+                                raise OverflowError("inf")
                             try:
                                 del expression_list[j - 1:j + 2]
                             except IndexError:
@@ -267,9 +285,11 @@ class Calculator:
                             if j - 1 < 0:
                                 raise SyntaxError(f"Operator {expression_list[j]} is misplaced 😡")
                             try:
-                                result = operator.operation(expression_list[j - 1])
+                                result = float(operator.operation(expression_list[j - 1]))
                             except ValueError as e:
                                 raise SyntaxError(f"Error - {e}")
+                            except OverflowError:
+                                raise OverflowError("inf")
                             del expression_list[j - 1:j + 1]
                             expression_list.insert(j - 1, result)
                         elif operator.position == "Left":
@@ -280,7 +300,10 @@ class Calculator:
                             isinstance(expression_list[find_next_operand], int) and
                                    find_next_operand < len(expression_list) - 1):
                                 find_next_operand += 1
-                            result = operator.operation(expression_list[find_next_operand])
+                            try:
+                                result = float(operator.operation(expression_list[find_next_operand]))
+                            except OverflowError:
+                                raise OverflowError("inf")
                             expression_list.pop(j)
                             expression_list.pop(find_next_operand - 1)
                             expression_list.insert(find_next_operand - 1, result)
@@ -293,12 +316,7 @@ class Calculator:
         if len(expression_list) > 1:
             raise SyntaxError(f"Error | {expression_list[1]} out of place 😡")
         result = expression_list.pop()
-        try:
-            if result == int(result):
-                result = int(result)
-        except OverflowError:
-            return result
-        return round(result, 10)
+        return result
 
     def solve(self):
         data_list = self.convert()
